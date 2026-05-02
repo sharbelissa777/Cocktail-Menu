@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <title>CodePen Demo</title>
+
+  <meta name="robots" content="noindex">
+
+  <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+  <link rel="mask-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111">
+  <link rel="canonical" href="https://codepen.io/pen">
+
+  
+  
+
+  <style id="INLINE_PEN_STYLESHEET_ID">
+    
+  </style>
+
+  
+<script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-f07739098a39bd4e74ddd974652dac904146f33fdc1ecab356e8c809a05faccb.js"></script>
+<script src="https://cpwebassets.codepen.io/assets/editor/iframe/iframeConsoleRunner-100b2a29d7a68d0f5c9eb0b3f9e63783410ea00dcab106def20a0ab3cf4a8804.js"></script>
+<script src="https://cpwebassets.codepen.io/assets/editor/iframe/iframeRuntimeErrors-4f205f2c14e769b448bcf477de2938c681660d5038bc464e3700256713ebe261.js"></script>
+</head>
+
+<body class="">
+  
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cocktail Menu - Interactive</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&amp;family=Playfair+Display:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- DESIGN (CSS) --- */
+        :root {
+            --bg-base: #0c0808; 
+            --text-main: #f0f0f0; 
+            --text-muted: #a0a0a0; 
+            --accent-gold: #d4af37; 
+            --accent-copper: #b87333;
+            --accent-danger: #ff4d4d;
+            --whatsapp-green: #25D366;
+            
+            --glass-bg: rgba(20, 15, 15, 0.6);
+            --glass-border: rgba(212, 175, 55, 0.15);
+            --glass-hover-border: rgba(212, 175, 55, 0.5);
+            --form-bg: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 60%, rgba(184, 115, 51, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 50% 90%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
+
+        h1 {
+            color: var(--accent-gold); font-size: 2.8rem; font-weight: 400; text-transform: uppercase;
+            letter-spacing: 5px; margin-bottom: 20px; text-align: center; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Filters */
+        #filter-container {
+            display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; width: 100%; max-width: 950px;
+        }
+        .filter-btn {
+            background: transparent; border: 1px solid var(--glass-border); color: var(--text-muted); padding: 8px 16px;
+            border-radius: 20px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; transition: all 0.3s;
+        }
+        .filter-btn:hover { border-color: var(--accent-copper); color: var(--text-main); }
+        .filter-btn.active { background: rgba(212, 175, 55, 0.15); border-color: var(--accent-gold); color: var(--accent-gold); font-weight: 500; }
+
+        #menu-container, #current-order-container, #history-list, #favorites-list {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; width: 100%; max-width: 950px;
+        }
+
+        .cocktail-button {
+            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); color: var(--text-main); padding: 15px; border-radius: 10px;
+            cursor: pointer; display: flex; align-items: center; text-align: left; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); position: relative;
+        }
+
+        .cocktail-button:hover {
+            border-color: var(--glass-hover-border); box-shadow: 0 8px 32px 0 rgba(212, 175, 55, 0.1);
+            transform: translateY(-5px); background: rgba(25, 20, 20, 0.7);
+        }
+
+        /* Special & Hidden Classes */
+        .cocktail-button.special-drink { border-color: var(--accent-gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+        .cocktail-button.hidden-admin { opacity: 0.5; border-style: dashed; border-color: rgba(255,255,255,0.2); }
+        .special-badge {
+            position: absolute; top: -10px; left: -10px; background: var(--accent-gold); color: #000; 
+            padding: 4px 8px; font-size: 0.7rem; font-weight: 700; border-radius: 4px; z-index: 5; 
+            text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .cocktail-button.history-item { opacity: 0.7; cursor: default; transform: none; box-shadow: none; border-color: rgba(255,255,255,0.05); }
+        .cocktail-thumb { width: 70px; height: 70px; border-radius: 6px; object-fit: cover; flex-shrink: 0; margin-right: 15px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .cocktail-info { display: flex; flex-direction: column; flex-grow: 1; padding-right: 40px; }
+        .cocktail-button strong { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 400; color: var(--text-main); margin-bottom: 5px; transition: color 0.3s ease; display: flex; align-items: center; }
+        .cocktail-button:hover strong { color: var(--accent-gold); }
+        .short-desc { font-size: 0.8rem; color: var(--text-muted); font-weight: 300; line-height: 1.3; }
+
+        /* Favorites Heart - Moved to bottom right */
+        .fav-btn { 
+            position: absolute; bottom: 15px; right: 15px; font-size: 1.3rem; 
+            cursor: pointer; transition: transform 0.2s, color 0.2s; 
+            display: inline-block; user-select: none; z-index: 10;
+        }
+        .fav-btn:hover { transform: scale(1.2); }
+        .fav-btn.active { color: #ff4d4d; }
+        .fav-btn.inactive { color: rgba(255,255,255,0.2); }
+
+        /* User Selection & Quantity Styles */
+        .select-drink-btn {
+            position: absolute; top: 15px; right: 15px; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--accent-copper);
+            color: var(--accent-copper); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 1.2rem; cursor: pointer; transition: all 0.3s; z-index: 10;
+        }
+        .select-drink-btn:hover { background: var(--accent-copper); color: var(--bg-base); }
+        .qty-controls {
+            position: absolute; top: 15px; right: 15px; display: flex; align-items: center; background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--accent-gold); border-radius: 20px; overflow: hidden; z-index: 10;
+        }
+        .qty-btn {
+            background: transparent; color: var(--accent-gold); border: none; width: 28px; height: 28px; font-size: 1.2rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+        }
+        .qty-btn:hover { background: rgba(212, 175, 55, 0.3); }
+        .qty-display { color: var(--text-main); font-weight: 600; min-width: 20px; text-align: center; font-size: 0.9rem; }
+
+        #my-tab-btn {
+            position: fixed; bottom: 30px; right: 30px; background-color: var(--accent-gold); color: var(--bg-base);
+            padding: 15px 25px; border-radius: 50px; font-family: 'Playfair Display', serif; font-size: 1.1rem;
+            font-weight: 600; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); z-index: 1000; transition: all 0.3s; display: none;
+        }
+        #my-tab-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6); }
+
+        #recipe-view, #login-view, #form-view, #shopping-view, #user-tab-view {
+            display: none; width: 100%; max-width: 650px; background: var(--glass-bg); backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px); padding: 45px; border-radius: 12px; border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.6); animation: fadeIn 0.6s ease-out forwards; opacity: 0; transform: translateY(15px);
+        }
+        #user-tab-view { max-width: 950px; background: transparent; border: none; box-shadow: none; padding: 0; backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        .nav-btn {
+            background: none; border: none; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; text-transform: uppercase;
+            letter-spacing: 2px; cursor: pointer; padding: 0; display: flex; align-items: center; transition: color 0.3s ease;
+            color: var(--accent-copper); margin-bottom: 30px;
+        }
+        .nav-btn:hover { color: var(--accent-gold); }
+
+        .recipe-title { color: var(--accent-gold); font-size: 3rem; margin-top: 0; text-align: center; margin-bottom: 30px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .recipe-image-container { width: 100%; height: 400px; background-color: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; margin-bottom: 35px; overflow: hidden; display: flex; justify-content: center; align-items: center; color: #555; font-style: italic; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        #r-image { width: 100%; height: 100%; object-fit: cover; display: none; transition: opacity 0.5s ease; }
+        .section-title { font-size: 0.85rem; color: var(--accent-gold); letter-spacing: 3px; text-transform: uppercase; margin-top: 40px; text-align: center; position: relative; }
+        .section-title::after { content: ''; display: block; width: 50px; height: 1px; background: var(--accent-gold); margin: 12px auto 20px auto; opacity: 0.5; }
+        ul { list-style: none; padding: 0; text-align: center; } li { margin-bottom: 14px; font-weight: 300; font-size: 1.1rem; letter-spacing: 0.3px; } p { text-align: center; font-weight: 300; line-height: 1.7; color: #ddd; font-size: 1.05rem; }
+        .details-grid { display: flex; justify-content: center; gap: 40px; margin-top: 25px; } .details-grid strong { color: var(--accent-copper); display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+
+        /* ADMIN SPECIFIC STYLES */
+        .admin-section { margin-top: 60px; border-top: 1px solid rgba(212, 175, 55, 0.1); padding-top: 20px; width: 100%; text-align: center; }
+        #login-toggle { font-size: 0.8rem; color: rgba(255, 255, 255, 0.15); text-transform: uppercase; letter-spacing: 2px; background: none; border: none; cursor: pointer; transition: color 0.3s; }
+        #login-toggle:hover { color: var(--accent-copper); }
+        .admin-controls-view { text-align: center; margin-bottom: 40px; padding: 25px; border: 1px dashed var(--accent-gold); border-radius: 8px; max-width: 500px; margin-left: auto; margin-right: auto; }
+        
+        .cocktail-admin-tools { display: none; margin-left: 10px; margin-right: -10px; }
+        .body-admin-active .cocktail-admin-tools { display: flex; flex-direction: column; gap: 5px; }
+        .body-admin-active .select-drink-btn, .body-admin-active .qty-controls { display: none; }
+        
+        .pill-btn { font-size: 0.7rem; padding: 5px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1.5px; border: none; cursor: pointer; transition: background 0.3s; }
+        .pill-btn.edit { background-color: var(--accent-copper); color: white; } .pill-btn.edit:hover { background-color: var(--accent-gold); }
+        .pill-btn.delete { background-color: transparent; border: 1px solid var(--accent-danger); color: var(--accent-danger); } .pill-btn.delete:hover { background-color: var(--accent-danger); color: white; }
+        .pill-btn.toggle-hide { background-color: #444; color: white; } .pill-btn.toggle-hide:hover { background-color: #666; }
+        .pill-btn.toggle-special { background-color: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold); } .pill-btn.toggle-special:hover { background-color: var(--accent-gold); color: black; }
+        
+        .action-btn { background-color: var(--accent-gold); color: var(--bg-base); padding: 10px 20px; font-weight: 500; border-radius: 4px; border: none; cursor: pointer; margin: 5px; } .action-btn:hover { background-color: var(--text-main); }
+        #logout-btn { color: var(--text-muted); font-size: 0.8rem; margin-top: 15px; background: none; border: none; cursor: pointer; text-decoration: underline; }
+
+        /* WhatsApp & Custom Input Styles */
+        #guest-name-input { width: 100%; padding: 15px; background-color: var(--glass-bg); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--text-main); border-radius: 8px; font-family: 'Montserrat', sans-serif; box-sizing: border-box; font-size: 1.1rem; margin-top: 30px; text-align: center; }
+        #guest-name-input:focus { outline: none; border-color: var(--accent-gold); }
+        .custom-msg-input { width:100%; padding:15px; margin-top:15px; background:var(--form-bg); color:var(--text-main); border:1px solid rgba(255,255,255,0.1); border-radius:8px; font-family:'Montserrat', sans-serif; box-sizing:border-box; resize:vertical; text-align:center; }
+        .custom-msg-input:focus { outline: none; border-color: var(--accent-gold); }
+        
+        .wa-btn { background-color: var(--whatsapp-green); color: white; font-size: 1.1rem; font-weight: 600; width: 100%; padding: 15px; margin-top: 15px; border-radius: 8px; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); cursor: pointer; border: none; }
+        .wa-btn:hover { background-color: #1ebe57; transform: translateY(-2px); }
+
+        /* Form & Shopping Styles */
+        .form-title { font-size: 1.6rem; color: var(--accent-gold); margin-bottom: 25px; text-align: center;}
+        .form-group { margin-bottom: 20px; text-align: left;} .form-group label { display: block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent-copper); margin-bottom: 8px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; background-color: var(--form-bg); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); border-radius: 4px; font-family: 'Montserrat', sans-serif; box-sizing: border-box; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-gold); } .form-group textarea { resize: vertical; height: 100px; }
+        .shopping-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); } .shopping-item input[type="checkbox"] { transform: scale(1.5); margin-right: 15px; accent-color: var(--accent-gold); } .shopping-label { flex-grow: 1; text-align: left; font-size: 1.1rem;}
+        #final-shopping-list { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; margin-top: 20px; text-align: left; display: none; } #final-shopping-list ul { text-align: left; padding: 0; margin: 0; }
+        .shopping-item-final { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.05); } .shopping-item-final input[type="checkbox"] { transform: scale(1.3); margin-right: 15px; accent-color: var(--accent-gold); cursor: pointer; } .shopping-item-final label { font-size: 1.05rem; color: var(--accent-gold); cursor: pointer; transition: all 0.2s ease; flex-grow: 1; } .shopping-item-final input[type="checkbox"]:checked + label { text-decoration: line-through; color: var(--text-muted); opacity: 0.6; }
+        #login-form { text-align: center; } #login-form h2 { color: var(--accent-gold); } #admin-pass { padding: 15px; font-size: 1.1rem; letter-spacing: 3px; text-align: center; width: 80%; margin-bottom: 20px; background-color: rgba(0,0,0,0.3); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--accent-gold); border-radius: 4px; } #login-error { color: var(--accent-danger); font-size: 0.9rem; margin-top: 15px; display: none; }
+
+        /* Modals & Animations */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 40px 30px; border-radius: 12px; border: 1px solid var(--accent-gold); text-align: center; max-width: 400px; width: 100%; box-shadow: 0 15px 50px rgba(0,0,0,0.6); }
+        .bartender-admin-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 4px; margin-bottom: 10px; font-size: 0.9rem; }
+        
+        @keyframes rouletteSpin { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        #roulette-emoji { font-size: 4rem; margin-bottom: 15px; animation: rouletteSpin 0.3s infinite; display: inline-block; }
+    </style>
+
+
+
+    <h1 id="main-title">The Cocktail Menu</h1>
+
+    <div id="filter-container">
+        <button class="filter-btn active" onclick="toggleFilter('All')">All</button>
+        <button class="filter-btn" onclick="toggleFilter('Gin')">Gin</button>
+        <button class="filter-btn" onclick="toggleFilter('Vodka')">Vodka</button>
+        <button class="filter-btn" onclick="toggleFilter('Rum')">Rum</button>
+        <button class="filter-btn" onclick="toggleFilter('Tequila')">Tequila</button>
+        <button class="filter-btn" style="border-color: var(--accent-gold); color: var(--accent-gold);" onclick="triggerDealersChoice()">🎲 Surprise Me</button>
+    </div>
+
+    <div id="dealers-choice-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="serif form-title" style="margin-top:0;">Dealer's Choice</h3>
+            <p style="margin-bottom: 30px; color: var(--text-main);">You've tried a few of our drinks! What's the mood?</p>
+            <button class="action-btn" style="width: 100%; margin: 0 0 10px 0;" onclick="executeDealersChoice(true)">Revisit a Favorite</button>
+            <button class="action-btn" style="width: 100%; margin: 0; background: transparent; border: 1px solid var(--accent-copper); color: var(--accent-copper);" onclick="executeDealersChoice(false)">Try Something New</button>
+            <button class="nav-btn" style="margin: 30px auto 0;" onclick="document.getElementById('dealers-choice-modal').style.display='none'">Cancel</button>
+        </div>
+    </div>
+
+    <div id="roulette-modal" class="modal-overlay">
+        <div class="modal-content" style="background: transparent; border: none; box-shadow: none;">
+            <div id="roulette-emoji">🎲</div>
+            <h2 id="roulette-text" class="serif recipe-title" style="color: var(--accent-gold); font-size: 2rem;">Shuffling...</h2>
+        </div>
+    </div>
+
+    <div id="wa-setup-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3 class="serif form-title" style="margin-top:0; font-size:1.3rem;">📱 Bartender Setup</h3>
+            <div id="bartenders-admin-list" style="text-align: left; margin-bottom: 20px; max-height: 150px; overflow-y: auto;"></div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <input type="text" id="wa-name-input" placeholder="Name (e.g. Sharbel)" style="flex:1; padding:10px; background:var(--form-bg); color:var(--text-main); border:1px solid rgba(255,255,255,0.1); border-radius: 4px;">
+                <input type="text" id="wa-number-input" placeholder="Phone (e.g. 972...)" style="flex:1; padding:10px; background:var(--form-bg); color:var(--text-main); border:1px solid rgba(255,255,255,0.1); border-radius: 4px;">
+            </div>
+            <button class="action-btn" style="width: 100%; margin: 0 0 10px 0; background: var(--whatsapp-green);" onclick="addBartender()">+ Add Bartender</button>
+            <button class="nav-btn" style="margin: 20px auto 0;" onclick="document.getElementById('wa-setup-modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <div id="bartender-select-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="serif form-title" style="margin-top:0;">Send Order To:</h3>
+            <p style="margin-bottom: 20px; color: var(--text-main);">Who is mixing your drinks tonight?</p>
+            <div id="bartender-options" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            <button class="nav-btn" style="margin: 30px auto 0;" onclick="document.getElementById('bartender-select-modal').style.display='none'">Cancel</button>
+        </div>
+    </div>
+
+    <button id="my-tab-btn" onclick="showUserTab()" style="display: none;">My Tab (1)</button>
+
+    <div id="admin-controls-view" class="admin-controls-view" style="display: none;">
+        <h3 class="serif">Welcome, Admin</h3>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button id="add-new-btn" class="action-btn">+ Add Cocktail</button>
+            <button id="open-shopping-btn" class="action-btn">🛒 Shopping</button>
+            <button class="action-btn" style="background:transparent; border:1px solid var(--accent-copper); color:var(--accent-copper);" onclick="openBartenderSetup()">📱 WhatsApp</button>
+            <button class="action-btn" style="width:100%; margin-top:15px; background:var(--text-main); color:var(--bg-base);" onclick="exportMenu()">💾 Export &amp; Download Menu</button>
+        </div>
+        <button id="logout-btn">Logout</button>
+    </div>
+
+    <div id="menu-container"></div>
+
+    <div id="user-tab-view">
+        <button id="tab-back-btn" class="nav-btn" onclick="loadMenu()">← Back to Menu</button>
+        <h2 class="recipe-title serif" style="margin-bottom: 15px;">Your Tab</h2>
+        
+        <div id="order-section" style="display: none;">
+            <h3 class="serif form-title" style="font-size: 1.2rem; text-align: left; color: var(--text-main);">Ready to Order:</h3>
+            <div id="current-order-container"></div>
+            
+            <input type="text" id="guest-name-input" placeholder="Enter your name (Required)...">
+            <textarea id="guest-custom-msg-order" class="custom-msg-input" rows="2">Hey! I'd like to put in an order for my tab:</textarea>
+            
+            <button class="wa-btn" onclick="prepareWhatsApp('order')">📱 Send Order</button>
+        </div>
+
+        <div id="favorites-section" style="display: none; margin-top: 40px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px;">
+            <h3 class="serif form-title" style="font-size: 1.2rem; text-align: left; color: #ff4d4d;">❤️ My Favorites</h3>
+            <div id="favorites-list"></div>
+        </div>
+
+        <div id="history-section" style="display: block; margin-top: 40px; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 20px;">
+            <h3 class="serif form-title" style="font-size: 1.2rem;">Drinks Enjoyed Tonight</h3>
+            <div id="history-list"></div>
+            
+            <textarea id="guest-custom-msg-history" class="custom-msg-input" rows="2" style="margin-top: 25px;">Closing out for the night. Here is my final tab. Thanks for the drinks!</textarea>
+            
+            <button class="wa-btn" onclick="prepareWhatsApp('history')">📱 Send Final Tab</button>
+            <button class="nav-btn" style="margin: 20px auto 0;" onclick="clearHistory()">Reset My History</button>
+        </div>
+        <p id="empty-tab-msg" style="text-align:center; width:100%; display: none;">Your tab is currently empty.</p>
+    </div>
+
+    <div id="login-view">
+        <button id="login-back-btn" class="nav-btn">← Back</button>
+        <div id="login-form">
+            <h2 class="serif">Speakeasy Login</h2>
+            <p>Please enter the secret phrase.</p>
+            <input type="password" id="admin-pass" placeholder="Enter Phrase">
+            <br>
+            <button id="submit-login-btn" class="action-btn" style="background: transparent; border: 1px solid var(--accent-copper); color: var(--accent-copper);">Log In</button>
+            <p id="login-error" style="display: none;">Incorrect passphrase.</p>
+        </div>
+    </div>
+
+    <div id="shopping-view">
+        <button id="shopping-back-btn" class="nav-btn">← Back to Menu</button>
+        <h3 class="form-title serif">Select Cocktails for Shopping</h3>
+        <p style="text-align: center; font-size: 0.9rem; margin-bottom: 20px;">Check the cocktails you plan to make. We'll generate a grocery list for you.</p>
+        <div id="shopping-selection-list"></div>
+        <button id="generate-list-btn" class="action-btn" style="width: 100%; margin-top: 20px;">Generate Shopping List</button>
+        <div id="final-shopping-list">
+            <div class="section-title" style="margin-top:0;">Items to Buy</div>
+            <p style="text-align: left; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">Check off the items you already have at home.</p>
+            <ul id="shopping-items-ul"></ul>
+        </div>
+    </div>
+
+    <div id="form-view">
+        <button id="form-back-btn" class="nav-btn">← Cancel</button>
+        <h3 id="form-view-title" class="form-title serif">Add New Cocktail</h3>
+        <input type="hidden" id="edit-index" value="-1">
+        <div class="form-group"><label>Cocktail Name</label><input type="text" id="drink-name" placeholder="e.g., Old Fashioned" required=""></div>
+        <div class="form-group"><label>Menu Description (Short)</label><input type="text" id="drink-desc" placeholder="e.g., Bourbon, Sugar, Bitters, Orange" required=""></div>
+        <div class="form-group"><label>Image URL (Hosted Link)</label><input type="url" id="drink-img" placeholder="https://i.postimg.cc/....jpg"></div>
+        <div class="form-group"><label>Ingredients (one per line)</label><textarea id="drink-ingredients" placeholder="60ml Bourbon
+1 tsp Sugar
+3 dashes Angostura Bitters" required=""></textarea></div>
+        <div class="form-group"><label>Method / Preparation</label><textarea id="drink-method" placeholder="Muddle sugar and bitters. Add ice and bourbon. Stir gently to chill." required=""></textarea></div>
+        <div class="form-group">
+            <div style="width: 48%; float: left;"><label>Glassware</label><input type="text" id="drink-glass" placeholder="e.g., Lowball" required=""></div>
+            <div style="width: 48%; float: right;"><label>Garnish</label><input type="text" id="drink-garnish" placeholder="e.g., Orange Peel" required=""></div>
+            <div style="clear: both;"></div>
+        </div>
+        <button id="save-cocktail-btn" class="action-btn" style="width: 100%;">Save to Ledger</button>
+    </div>
+
+    <div id="recipe-view">
+        <button id="back-btn" class="nav-btn">← Back to Menu</button>
+        <h2 id="r-name" class="recipe-title serif"></h2>
+        <div class="recipe-image-container"><span id="image-placeholder-text">🍸</span><img id="r-image" src="" alt="Cocktail Image"></div>
+        <div class="section-title">Ingredients</div><ul id="r-ingredients"></ul>
+        <div class="section-title">Method</div><p id="r-method"></p>
+        <div class="section-title">Serve</div>
+        <div class="details-grid"><p><strong>Glass</strong> <span id="r-glass"></span></p><p><strong>Garnish</strong> <span id="r-garnish"></span></p></div>
+    </div>
+
+    <div class="admin-section" id="admin-trigger-container">
+        <button id="login-toggle">Admin Ledger Access</button>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const SECRET_PASSPHRASE = 'barman'; 
+        const INITIAL_BARTENDERS = [
+    {
+        "name": "Sharbel",
+        "number": "972524606669"
+    }
+]; 
+
+        const originalCocktails = [
+    {
+        "name": "Negroni",
+        "shortDesc": "Gin, Campari, Sweet Vermouth",
+        "imageUrl": "https://i.postimg.cc/KjnfQG7K/Screenshot-20260321-235439-Slides.jpg",
+        "ingredients": [
+            "30ml Gin",
+            "30ml Campari",
+            "30ml Red Vermouth"
+        ],
+        "method": "Build in glass over a large ice cube. Stir gently to chill.",
+        "glass": "Lowball (Rocks)",
+        "garnish": "Orange peel",
+        "isSpecial": false
+    },
+    {
+        "name": "Enzoni",
+        "shortDesc": "Gin, Campari, Lemon, Grapes",
+        "imageUrl": "https://i.postimg.cc/5ypK59qZ/IMG-20260321-WA0018.jpg",
+        "ingredients": [
+            "30ml Gin",
+            "30ml Campari",
+            "20ml Lemon Juice",
+            "15ml Simple Syrup",
+            "5 Fresh Green Grapes"
+        ],
+        "method": "Muddle grapes in a shaker. Add gin, campari, lemon, syrup, and ice. Shake vigorously. Double strain over fresh ice.",
+        "glass": "Lowball",
+        "garnish": "Skewered grapes",
+        "isHidden": false,
+        "isSpecial": false
+    },
+    {
+        "name": "Espresso Martini",
+        "shortDesc": "Vodka, Coffee Liqueur, Fresh Espresso",
+        "imageUrl": "https://i.postimg.cc/4yTbYDDM/Screenshot-20260321-235506-Slides.jpg",
+        "ingredients": [
+            "60ml Vodka",
+            "30ml Coffee Liqueur",
+            "30ml Fresh Espresso (hot)"
+        ],
+        "method": "Pour all ingredients into a shaker with ice. Shake very hard to create a rich foam. Fine strain into a chilled glass.",
+        "glass": "Coupette / Martini",
+        "garnish": "3 Coffee beans",
+        "isSpecial": false
+    },
+    {
+        "name": "Vodka Blueberry",
+        "shortDesc": "Vodka, Blueberries, Brown Sugar, Sprite",
+        "imageUrl": "https://i.postimg.cc/R06cXC4S/Screenshot-20260321-235740-Slides.jpg",
+        "ingredients": [
+            "60ml Vodka",
+            "1 tsp Brown Sugar",
+            "10-15 Fresh Blueberries",
+            "Top with Sprite"
+        ],
+        "method": "Add blueberries and brown sugar to muddle, add vodka and ice, top with sprite.",
+        "glass": "Highball",
+        "garnish": "Mint sprig",
+        "isHidden": false
+    },
+    {
+        "name": "Kamikaze",
+        "shortDesc": "Vodka, Triple Sec, Lime",
+        "imageUrl": "https://i.postimg.cc/9XpqPwZq/Screenshot-20260321-235800-Slides.jpg",
+        "ingredients": [
+            "60ml Vodka",
+            "30ml Triple Sec",
+            "30ml Fresh Lime Juice"
+        ],
+        "method": "Shake with ice and strain into chilled glass.",
+        "glass": "Coupette / Martini",
+        "garnish": "Lime wheel"
+    },
+    {
+        "name": "Classic Daiquiri",
+        "shortDesc": "Rum, Lime, Sugar",
+        "imageUrl": "https://i.postimg.cc/sgpBXBjC/1774131489804.png",
+        "ingredients": [
+            "60ml White Rum",
+            "30ml Fresh Lime Juice",
+            "20ml Sugar Syrup"
+        ],
+        "method": "Shake vigorously with ice. Fine strain.",
+        "glass": "Coupette",
+        "garnish": "Lime wheel",
+        "isHidden": false
+    },
+    {
+        "name": "Cucumber Daiquiri",
+        "shortDesc": "Rum, Lime, Cucumber, Mint",
+        "imageUrl": "https://i.postimg.cc/zvSMvScT/Screenshot-20260322-000638-Slides.jpg",
+        "ingredients": [
+            "60ml White Rum",
+            "30ml Fresh Lime Juice",
+            "30ml Sugar Syrup",
+            "3 Cucumber slices",
+            "6-8 Mint leaves"
+        ],
+        "method": "Muddle cucumber/mint. Add liquid. Shake well. Double strain.",
+        "glass": "Coupette",
+        "garnish": "Cucumber slice",
+        "isHidden": false
+    },
+    {
+        "name": "Paloma",
+        "shortDesc": "Tequila, Lime, Grapefruit Soda",
+        "imageUrl": "https://i.postimg.cc/k4SL3dN1/Screenshot-20260322-000656-Slides.jpg",
+        "ingredients": [
+            "60ml Tequila",
+            "15ml Lime Juice",
+            "Top with Grapefruit Soda"
+        ],
+        "method": "Built in glass with salted rim. Add ice, tequila, lime, top with soda.",
+        "glass": "Highball",
+        "garnish": "Grapefruit wedge",
+        "isSpecial": false,
+        "isHidden": false
+    },
+    {
+        "name": "Corpse Reviver No. 2",
+        "shortDesc": "Gin, Vermouth, Triple Sec, Lemon, Absinthe",
+        "imageUrl": "https://i.postimg.cc/h4dKGxrp/1774207751858.png",
+        "ingredients": [
+            "30ml Gin",
+            "30ml White Vermouth",
+            "30ml Triple Sec",
+            "30ml Fresh Lemon Juice",
+            "Dash of Absinthe"
+        ],
+        "method": "Rinse chilled glass with absinthe. Shake other ingredients with ice. Fine strain.",
+        "glass": "Coupette",
+        "garnish": "Lemon twist",
+        "isHidden": false
+    },
+    {
+        "name": "Gin Passionfruit",
+        "shortDesc": "Gin, Passionfruit Liqueur, Lime, Simple Syrup",
+        "imageUrl": "https://i.postimg.cc/5tB8Z7YQ/1774131176117.png",
+        "ingredients": [
+            "60ml Gin",
+            "25ml Fresh Lime Juice",
+            "15ml Simple Syrup",
+            "1 fresh Passionfruit (pulp)"
+        ],
+        "method": "Shake passionfruit pulp with liquids. Fine strain.",
+        "glass": "Coupe",
+        "garnish": "Half a passionfruit",
+        "isSpecial": false
+    },
+    {
+        "name": "Flower Sour",
+        "shortDesc": "Gin, Elderflower Liqueur, Lemon, Egg White",
+        "imageUrl": "https://i.postimg.cc/MGqn75s5/1774208265854.png",
+        "ingredients": [
+            "60ml Gin",
+            "30ml St-Germain",
+            "30ml Fresh Lime Juice",
+            "7.5ml Simple Syrup",
+            "Optional 1 White Egg"
+        ],
+        "method": "Dry shake, then wet shake. Strain.",
+        "glass": "Coupe",
+        "garnish": "Lavender & Viola"
+    }
+];
+
+        let cocktails = JSON.parse(localStorage.getItem('cocktails_database')) || originalCocktails;
+        let bartenders = JSON.parse(localStorage.getItem('bartenders_list')) || INITIAL_BARTENDERS;
+        
+        let isAdmin = false;
+        let activeFilters = new Set(['All']); 
+        let userTab = {}; 
+        let drinkHistory = JSON.parse(localStorage.getItem('drink_history')) || {};
+        let userFavorites = JSON.parse(localStorage.getItem('user_favorites')) || []; 
+        let pendingWAAction = null; 
+
+        /* --- UI ELEMENTS --- */
+        const els = {
+            filterContainer: document.getElementById('filter-container'), menu: document.getElementById('menu-container'), recipe: document.getElementById('recipe-view'),
+            mainTitle: document.getElementById('main-title'), back: document.getElementById('back-btn'), adminView: document.getElementById('admin-controls-view'),
+            logout: document.getElementById('logout-btn'), add: document.getElementById('add-new-btn'), loginView: document.getElementById('login-view'),
+            adminToggle: document.getElementById('login-toggle'), loginBack: document.getElementById('login-back-btn'), submitLogin: document.getElementById('submit-login-btn'),
+            passInput: document.getElementById('admin-pass'), loginError: document.getElementById('login-error'), formView: document.getElementById('form-view'),
+            formTitle: document.getElementById('form-view-title'), formBack: document.getElementById('form-back-btn'), saveBtn: document.getElementById('save-cocktail-btn'),
+            fIndex: document.getElementById('edit-index'), fName: document.getElementById('drink-name'), fDesc: document.getElementById('drink-desc'),
+            fImg: document.getElementById('drink-img'), fIng: document.getElementById('drink-ingredients'), fMethod: document.getElementById('drink-method'),
+            fGlass: document.getElementById('drink-glass'), fGarnish: document.getElementById('drink-garnish'), shoppingBtn: document.getElementById('open-shopping-btn'),
+            shoppingView: document.getElementById('shopping-view'), shoppingBack: document.getElementById('shopping-back-btn'), shoppingListContainer: document.getElementById('shopping-selection-list'),
+            generateListBtn: document.getElementById('generate-list-btn'), finalShoppingList: document.getElementById('final-shopping-list'), shoppingItemsUl: document.getElementById('shopping-items-ul'),
+            myTabBtn: document.getElementById('my-tab-btn'), userTabView: document.getElementById('user-tab-view'), orderSection: document.getElementById('order-section'),
+            currentOrderContainer: document.getElementById('current-order-container'), historySection: document.getElementById('history-section'), historyList: document.getElementById('history-list'),
+            emptyTabMsg: document.getElementById('empty-tab-msg'), adminTriggerContainer: document.getElementById('admin-trigger-container'),
+            guestNameInput: document.getElementById('guest-name-input'), dealersChoiceModal: document.getElementById('dealers-choice-modal'),
+            waSetupModal: document.getElementById('wa-setup-modal'), bartendersAdminList: document.getElementById('bartenders-admin-list'),
+            waNameInput: document.getElementById('wa-name-input'), waNumberInput: document.getElementById('wa-number-input'),
+            bartenderSelectModal: document.getElementById('bartender-select-modal'), bartenderOptions: document.getElementById('bartender-options'),
+            guestCustomMsgOrder: document.getElementById('guest-custom-msg-order'), guestCustomMsgHistory: document.getElementById('guest-custom-msg-history'),
+            favoritesSection: document.getElementById('favorites-section'), favoritesList: document.getElementById('favorites-list'),
+            rouletteModal: document.getElementById('roulette-modal'), rouletteEmoji: document.getElementById('roulette-emoji'), rouletteText: document.getElementById('roulette-text')
+        };
+
+        els.guestNameInput.value = localStorage.getItem('guest_name') || '';
+
+        function saveToStorage() { localStorage.setItem('cocktails_database', JSON.stringify(cocktails)); }
+
+        function hideAllViews() {
+            els.menu.style.display = 'none'; els.recipe.style.display = 'none'; els.loginView.style.display = 'none';
+            els.formView.style.display = 'none'; els.shoppingView.style.display = 'none'; els.userTabView.style.display = 'none';
+            els.mainTitle.style.display = 'none'; els.adminTriggerContainer.style.display = 'none'; els.filterContainer.style.display = 'none';
+            els.adminView.style.display = 'none'; 
+        }
+
+        /* --- ADMIN MULTI-BARTENDER LOGIC --- */
+        function openBartenderSetup() { renderAdminBartenders(); els.waSetupModal.style.display = 'flex'; }
+        function renderAdminBartenders() {
+            els.bartendersAdminList.innerHTML = '';
+            if (bartenders.length === 0) { els.bartendersAdminList.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem; text-align:center;">No bartenders added yet.</p>'; return; }
+            bartenders.forEach((b, index) => {
+                const item = document.createElement('div'); item.className = 'bartender-admin-item';
+                item.innerHTML = `<span><strong>${b.name}</strong> (${b.number})</span> <button style="background:transparent; border:none; color:var(--accent-danger); cursor:pointer;" onclick="removeBartender(${index})">X</button>`;
+                els.bartendersAdminList.appendChild(item);
+            });
+        }
+        function addBartender() {
+            const name = els.waNameInput.value.trim(); const num = els.waNumberInput.value.trim();
+            if (!name || !num) { alert("Please provide both a Name and a WhatsApp Number."); return; }
+            bartenders.push({ name: name, number: num }); localStorage.setItem('bartenders_list', JSON.stringify(bartenders));
+            els.waNameInput.value = ''; els.waNumberInput.value = ''; renderAdminBartenders();
+        }
+        function removeBartender(index) {
+            bartenders.splice(index, 1); localStorage.setItem('bartenders_list', JSON.stringify(bartenders)); renderAdminBartenders();
+        }
+
+        /* --- FAVORITES LOGIC --- */
+        function toggleFavorite(index, event) {
+            event.stopPropagation(); 
+            if (userFavorites.includes(index)) {
+                userFavorites = userFavorites.filter(fav => fav !== index);
+            } else {
+                userFavorites.push(index);
+            }
+            localStorage.setItem('user_favorites', JSON.stringify(userFavorites));
+            loadMenu(); 
+        }
+
+        /* --- FILTERS & DEALERS CHOICE (ROULETTE) --- */
+        function toggleFilter(spirit) {
+            if (spirit === 'All') { activeFilters.clear(); activeFilters.add('All'); } 
+            else {
+                activeFilters.delete('All');
+                if (activeFilters.has(spirit)) { activeFilters.delete(spirit); if (activeFilters.size === 0) activeFilters.add('All'); } 
+                else { activeFilters.add(spirit); }
+            }
+            document.querySelectorAll('.filter-btn').forEach(btn => { if(activeFilters.has(btn.innerText)) btn.classList.add('active'); else btn.classList.remove('active'); });
+            loadMenu();
+        }
+
+        function triggerDealersChoice() {
+            if (Object.keys(drinkHistory).length >= 2) { els.dealersChoiceModal.style.display = 'flex'; } 
+            else { executeDealersChoice(false); }
+        }
+
+        function executeDealersChoice(isFavorite) {
+            els.dealersChoiceModal.style.display = 'none'; let candidateIndices = [];
+            if (isFavorite) { candidateIndices = Object.keys(drinkHistory).map(Number); } 
+            else {
+                cocktails.forEach((drink, i) => { if (!drink.isHidden && !drinkHistory.hasOwnProperty(i)) candidateIndices.push(i); });
+                if (candidateIndices.length === 0) { candidateIndices = cocktails.map((_, i) => i); }
+            }
+            const targetIndex = candidateIndices[Math.floor(Math.random() * candidateIndices.length)];
+            playRoulette(targetIndex);
+        }
+
+        function playRoulette(targetIndex) {
+            els.rouletteModal.style.display = 'flex';
+            let ticks = 0; const maxTicks = 15;
+            const emojis = ['🍸', '🍹', '🍷', '🥃', '🥂', '🧉', '🍾', '🧊'];
+            
+            const spinInterval = setInterval(() => {
+                els.rouletteEmoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                els.rouletteText.innerText = cocktails[Math.floor(Math.random() * cocktails.length)].name;
+                ticks++;
+                
+                if (ticks >= maxTicks) {
+                    clearInterval(spinInterval);
+                    els.rouletteEmoji.innerText = '🎯';
+                    els.rouletteText.innerText = cocktails[targetIndex].name;
+                    
+                    setTimeout(() => {
+                        els.rouletteModal.style.display = 'none';
+                        showRecipe(targetIndex);
+                    }, 800);
+                }
+            }, 120); 
+        }
+
+        /* --- USER TAB & QUANTITY --- */
+        function updateTabButton() {
+            let total = Object.values(userTab).reduce((sum, val) => sum + val, 0);
+            if (total > 0 && !isAdmin) { els.myTabBtn.style.display = 'block'; els.myTabBtn.innerText = `My Tab (${total})`; } 
+            else { els.myTabBtn.style.display = 'none'; }
+        }
+
+        function updateQty(index, change, event) {
+            if(event) event.stopPropagation();
+            let current = userTab[index] || 0; current += change;
+            if (current <= 0) { delete userTab[index]; } else { userTab[index] = current; }
+            updateTabButton();
+            if (els.userTabView.style.display === 'block') { showUserTab(); } else { loadMenu(); }
+        }
+
+        function clearHistory() {
+            if(confirm("Are you sure you want to clear your drink history for tonight?")) {
+                drinkHistory = {}; localStorage.removeItem('drink_history'); showUserTab();
+            }
+        }
+
+        function showUserTab() {
+            hideAllViews(); els.userTabView.style.display = 'block'; els.myTabBtn.style.display = 'none'; 
+            const hasOrder = Object.keys(userTab).length > 0; const hasHistory = Object.keys(drinkHistory).length > 0; const hasFavs = userFavorites.length > 0;
+            els.emptyTabMsg.style.display = (!hasOrder && !hasHistory && !hasFavs) ? 'block' : 'none';
+            
+            if (hasOrder) {
+                els.orderSection.style.display = 'block'; els.currentOrderContainer.innerHTML = '';
+                Object.keys(userTab).forEach(key => {
+                    const idx = parseInt(key); const drink = cocktails[idx];
+                    els.currentOrderContainer.appendChild(createDrinkCard(drink, idx, true));
+                });
+            } else { els.orderSection.style.display = 'none'; }
+
+            if (hasFavs) {
+                els.favoritesSection.style.display = 'block'; els.favoritesList.innerHTML = '';
+                userFavorites.forEach(idx => {
+                    if(!cocktails[idx]) return;
+                    els.favoritesList.appendChild(createDrinkCard(cocktails[idx], idx, true));
+                });
+            } else { els.favoritesSection.style.display = 'none'; }
+
+            if (hasHistory) {
+                els.historySection.style.display = 'block'; els.historyList.innerHTML = '';
+                Object.keys(drinkHistory).forEach(key => {
+                    const idx = parseInt(key); if(!cocktails[idx]) return; const drink = cocktails[idx];
+                    const btn = document.createElement('div'); btn.className = 'cocktail-button history-item';
+                    const img = (drink.imageUrl && drink.imageUrl.trim() !== "") ? `<img src="${drink.imageUrl}" class="cocktail-thumb">` : `<div class="cocktail-thumb placeholder-thumb">🍸</div>`;
+                    btn.innerHTML = `${img}<div class="cocktail-info"><strong>${drink.name}</strong><div class="short-desc" style="color: var(--accent-gold); font-weight: 500;">Total had tonight: ${drinkHistory[idx]}</div></div>`;
+                    els.historyList.appendChild(btn);
+                });
+            } else { els.historySection.style.display = 'none'; }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* --- MULTI-BARTENDER WHATSAPP LOGIC --- */
+        function prepareWhatsApp(actionType) {
+            if (actionType === 'order' && Object.keys(userTab).length === 0) return;
+            if (actionType === 'history' && Object.keys(drinkHistory).length === 0) return;
+            if (bartenders.length === 0) { alert("Hold on! The host hasn't set up the bartender WhatsApp numbers yet."); return; }
+
+            const guestName = els.guestNameInput.value.trim();
+            if (actionType === 'order' && !guestName) { alert("Please enter your name so the bartender knows who ordered!"); els.guestNameInput.focus(); return; }
+            if (guestName) localStorage.setItem('guest_name', guestName);
+
+            if (bartenders.length === 1) { executeWhatsApp(actionType, bartenders[0]); } 
+            else {
+                pendingWAAction = actionType; els.bartenderOptions.innerHTML = '';
+                bartenders.forEach((b, index) => {
+                    const btn = document.createElement('button'); btn.className = 'action-btn wa-btn'; btn.style.margin = '0';
+                    btn.innerHTML = `📱 Send to ${b.name}`;
+                    btn.onclick = () => { els.bartenderSelectModal.style.display = 'none'; executeWhatsApp(pendingWAAction, b); };
+                    els.bartenderOptions.appendChild(btn);
+                });
+                els.bartenderSelectModal.style.display = 'flex';
+            }
+        }
+
+        function executeWhatsApp(actionType, bartenderObj) {
+            const guestName = localStorage.getItem('guest_name') || "A Guest";
+            let msg = '';
+
+            if (actionType === 'order') {
+                let orderLines = [];
+                Object.keys(userTab).forEach(key => {
+                    const idx = parseInt(key); const drink = cocktails[idx]; const count = userTab[idx];
+                    orderLines.push(`• ${count}x ${drink.name}`); drinkHistory[idx] = (drinkHistory[idx] || 0) + count;
+                });
+                localStorage.setItem('drink_history', JSON.stringify(drinkHistory)); userTab = {}; 
+                const customText = els.guestCustomMsgOrder.value.trim();
+                msg = `${customText}\n\n${orderLines.join('\n')}\n\nتسلم \uD83E\uDD11\n${guestName}`;
+                updateTabButton(); showUserTab();
+            } else if (actionType === 'history') {
+                let historyLines = [];
+                Object.keys(drinkHistory).forEach(key => {
+                    const idx = parseInt(key); if(!cocktails[idx]) return; 
+                    historyLines.push(`• ${drinkHistory[idx]}x ${cocktails[idx].name}`);
+                });
+                const customText = els.guestCustomMsgHistory.value.trim();
+                msg = `${customText}\n\n${historyLines.join('\n')}\n\nتسلم \uD83E\uDD11\n${guestName}`;
+            }
+            window.open(`https://wa.me/${bartenderObj.number}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        /* --- EXPORT MENU LOGIC --- */
+        function exportMenu() {
+            const cloneNode = document.documentElement.cloneNode(true);
+            
+            ['menu-container', 'current-order-container', 'favorites-list', 'history-list', 'shopping-selection-list', 'shopping-items-ul', 'bartenders-admin-list', 'bartender-options'].forEach(id => {
+                let el = cloneNode.querySelector('#' + id); if(el) el.innerHTML = '';
+            });
+
+            const views = ['menu-container', 'recipe-view', 'login-view', 'form-view', 'shopping-view', 'user-tab-view', 'admin-controls-view', 'main-title', 'admin-trigger-container', 'filter-container', 'dealers-choice-modal', 'wa-setup-modal', 'bartender-select-modal', 'roulette-modal'];
+            views.forEach(id => { let el = cloneNode.querySelector('#' + id); if(el) el.removeAttribute('style'); });
+            
+            let adminViewNode = cloneNode.querySelector('#admin-controls-view');
+            if(adminViewNode) adminViewNode.style.display = 'none';
+            
+            cloneNode.querySelector('body').classList.remove('body-admin-active');
+
+            let htmlString = "<!DOCTYPE html>\n<html lang=\"en\">\n" + cloneNode.innerHTML + "\n</html>";
+
+            htmlString = htmlString.replace(/const originalCocktails = \[[\s\S]*?\];/, `const originalCocktails = ${JSON.stringify(cocktails, null, 4)};`);
+            htmlString = htmlString.replace(/const INITIAL_BARTENDERS = \[[\s\S]*?\];/, `const INITIAL_BARTENDERS = ${JSON.stringify(bartenders, null, 4)};`);
+
+            const blob = new Blob([htmlString], { type: 'text/html;charset=utf-8' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'speakeasy-menu.html';
+            a.click();
+        }
+
+        /* --- MAIN MENU LOGIC --- */
+        function createDrinkCard(drink, index, inTab = false) {
+            const btn = document.createElement('div'); 
+            btn.className = `cocktail-button ${drink.isSpecial ? 'special-drink' : ''} ${drink.isHidden ? 'hidden-admin' : ''}`;
+            
+            let badges = '';
+            if (drink.isHidden && !inTab) badges += `<div class="special-badge" style="background:var(--text-muted);">Hidden</div>`;
+            else if (drink.isSpecial && !inTab) badges += `<div class="special-badge">⭐ Special</div>`;
+
+            const img = (drink.imageUrl && drink.imageUrl.trim() !== "") ? `<img src="${drink.imageUrl}" class="cocktail-thumb">` : `<div class="cocktail-thumb placeholder-thumb">🍸</div>`;
+            const count = userTab[index] || 0; let controlHtml = '';
+            
+            if (!isAdmin) {
+                if (count > 0) controlHtml = `<div class="qty-controls" onclick="event.stopPropagation()"><button class="qty-btn" onclick="updateQty(${index}, -1, event)">-</button><span class="qty-display">${count}</span><button class="qty-btn" onclick="updateQty(${index}, 1, event)">+</button></div>`;
+                else controlHtml = `<div class="select-drink-btn" onclick="updateQty(${index}, 1, event)">+</div>`;
+            }
+
+            let adminHtml = '';
+            if (isAdmin && !inTab) {
+                adminHtml = `<div class="cocktail-admin-tools">
+                    <button class="pill-btn edit" onclick="openEditor(${index}); event.stopPropagation();">Edit</button>
+                    <button class="pill-btn toggle-hide" onclick="toggleHide(${index}); event.stopPropagation();">${drink.isHidden ? 'Unhide' : 'Hide'}</button>
+                    <button class="pill-btn toggle-special" onclick="toggleSpecial(${index}); event.stopPropagation();">${drink.isSpecial ? 'Unpin' : 'Pin ⭐'}</button>
+                    <button class="pill-btn delete" onclick="deleteCocktail(${index}); event.stopPropagation();">Del</button>
+                </div>`;
+            }
+
+            // Favorites Heart Logic
+            let heartHtml = '';
+            if (!isAdmin && !inTab) {
+                const isFav = userFavorites.includes(index);
+                const heartClass = isFav ? 'active' : 'inactive';
+                const heartIcon = isFav ? '❤️' : '🤍';
+                heartHtml = `<span class="fav-btn ${heartClass}" onclick="toggleFavorite(${index}, event)">${heartIcon}</span>`;
+            }
+
+            btn.innerHTML = `${badges}${img}<div class="cocktail-info"><strong>${drink.name}</strong><div class="short-desc">${drink.shortDesc}</div></div>${controlHtml}${adminHtml}${heartHtml}`;
+            btn.onclick = () => showRecipe(index); 
+            return btn;
+        }
+
+        function loadMenu() {
+            hideAllViews(); els.menu.style.display = 'grid'; els.mainTitle.style.display = 'block';
+            els.adminTriggerContainer.style.display = 'block'; els.filterContainer.style.display = 'flex';
+            
+            if (isAdmin) els.adminView.style.display = 'block';
+            
+            els.menu.innerHTML = ''; updateTabButton(); 
+
+            const passesFilters = (drink) => {
+                if (activeFilters.has('All')) return true;
+                for (let filter of activeFilters) {
+                    const fLow = filter.toLowerCase();
+                    if (drink.ingredients.some(i => i.toLowerCase().includes(fLow)) || drink.shortDesc.toLowerCase().includes(fLow)) return true;
+                }
+                return false;
+            };
+
+            cocktails.forEach((drink, index) => { if (drink.isSpecial && (isAdmin || !drink.isHidden) && passesFilters(drink)) els.menu.appendChild(createDrinkCard(drink, index)); });
+            cocktails.forEach((drink, index) => { if (!drink.isSpecial && (isAdmin || !drink.isHidden) && passesFilters(drink)) els.menu.appendChild(createDrinkCard(drink, index)); });
+        }
+
+        function showRecipe(index) {
+            if (isAdmin) return;
+            hideAllViews(); els.adminView.style.display = 'none'; els.recipe.style.display = 'block';
+            const drink = cocktails[index];
+            document.getElementById('r-name').innerText = drink.name; document.getElementById('r-method').innerText = drink.method;
+            document.getElementById('r-glass').innerText = drink.glass; document.getElementById('r-garnish').innerText = drink.garnish;
+            const imgEl = document.getElementById('r-image'); const ph = document.getElementById('image-placeholder-text');
+            if (drink.imageUrl && drink.imageUrl.trim() !== "") { imgEl.src = drink.imageUrl; imgEl.style.display = 'block'; ph.style.display = 'none'; } 
+            else { imgEl.src = ""; imgEl.style.display = 'none'; ph.style.display = 'block'; }
+            const ingList = document.getElementById('r-ingredients'); ingList.innerHTML = '';
+            drink.ingredients.forEach(ing => { const li = document.createElement('li'); li.innerText = ing; ingList.appendChild(li); });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* --- ADMIN LOGIC --- */
+        els.submitLogin.onclick = () => {
+            if (els.passInput.value === SECRET_PASSPHRASE) {
+                isAdmin = true; document.body.classList.add('body-admin-active'); els.loginError.style.display = 'none';
+                els.passInput.value = ''; els.adminView.style.display = 'block'; loadMenu();
+            } else { els.loginError.style.display = 'block'; els.passInput.value = ''; }
+        };
+        els.logout.onclick = () => { isAdmin = false; els.adminView.style.display = 'none'; document.body.classList.remove('body-admin-active'); loadMenu(); };
+
+        function openEditor(index = -1) {
+            hideAllViews(); els.adminView.style.display = 'none'; els.formView.style.display = 'block';
+            if (index >= 0) {
+                els.formTitle.innerText = "Edit Cocktail Ledger"; const d = cocktails[index]; els.fIndex.value = index; 
+                els.fName.value = d.name; els.fDesc.value = d.shortDesc; els.fImg.value = d.imageUrl;
+                els.fIng.value = d.ingredients.join('\n'); els.fMethod.value = d.method; els.fGlass.value = d.glass; els.fGarnish.value = d.garnish;
+            } else {
+                els.formTitle.innerText = "Add New Cocktail"; els.fIndex.value = -1; els.fName.value = ''; els.fDesc.value = ''; els.fImg.value = '';
+                els.fIng.value = ''; els.fMethod.value = ''; els.fGlass.value = ''; els.fGarnish.value = '';
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        els.saveBtn.onclick = () => {
+            if (!els.fName.value || !els.fDesc.value || !els.fIng.value || !els.fMethod.value) { alert('Ledger entries must contain Name, Description, Ingredients, and Method.'); return; }
+            const idx = parseInt(els.fIndex.value);
+            let ext = idx >= 0 ? cocktails[idx] : { isHidden: false, isSpecial: false };
+            const data = {
+                name: els.fName.value, shortDesc: els.fDesc.value, imageUrl: els.fImg.value,
+                ingredients: els.fIng.value.split('\n').filter(l => l.trim() !== ""), method: els.fMethod.value, glass: els.fGlass.value, garnish: els.fGarnish.value,
+                isHidden: ext.isHidden, isSpecial: ext.isSpecial
+            };
+            if (idx >= 0) { cocktails[idx] = data; } else { cocktails.unshift(data); }
+            saveToStorage(); if (isAdmin) els.adminView.style.display = 'block'; loadMenu();
+        };
+
+        function toggleHide(index) { cocktails[index].isHidden = !cocktails[index].isHidden; saveToStorage(); loadMenu(); }
+        function toggleSpecial(index) { cocktails[index].isSpecial = !cocktails[index].isSpecial; saveToStorage(); loadMenu(); }
+
+        function deleteCocktail(index) {
+            if (confirm(`Remove ${cocktails[index].name} permanently?`)) {
+                cocktails.splice(index, 1);
+                
+                let nT = {}; for(let k in userTab) { let i=parseInt(k); if(i<index) nT[i]=userTab[i]; else if(i>index) nT[i-1]=userTab[i]; } userTab = nT;
+                let nH = {}; for(let k in drinkHistory) { let i=parseInt(k); if(i<index) nH[i]=drinkHistory[i]; else if(i>index) nH[i-1]=drinkHistory[i]; } drinkHistory = nH;
+                localStorage.setItem('drink_history', JSON.stringify(drinkHistory)); 
+                
+                let nF = []; userFavorites.forEach(f => { if(f < index) nF.push(f); else if(f > index) nF.push(f-1); }); userFavorites = nF;
+                localStorage.setItem('user_favorites', JSON.stringify(userFavorites));
+
+                saveToStorage(); loadMenu();
+            }
+        }
+
+        els.back.onclick = loadMenu; els.adminToggle.onclick = () => { hideAllViews(); els.loginView.style.display = 'block'; els.passInput.focus(); };
+        els.loginBack.onclick = loadMenu; els.formBack.onclick = () => { if (isAdmin) els.adminView.style.display = 'block'; loadMenu(); };
+        els.add.onclick = () => openEditor(-1);
+
+        els.shoppingBtn.onclick = () => {
+            hideAllViews(); els.adminView.style.display = 'none'; els.shoppingView.style.display = 'block';
+            els.finalShoppingList.style.display = 'none'; els.shoppingListContainer.innerHTML = '';
+            cocktails.forEach((drink, index) => {
+                const item = document.createElement('div'); item.className = 'shopping-item';
+                item.innerHTML = `<input type="checkbox" id="shop-chk-${index}" value="${index}"><label class="shopping-label" for="shop-chk-${index}">${drink.name}</label>`;
+                els.shoppingListContainer.appendChild(item);
+            });
+        };
+        els.generateListBtn.onclick = () => {
+            const chks = document.querySelectorAll('input[type="checkbox"]:checked');
+            if (chks.length === 0) { alert("Please select at least one cocktail."); return; }
+            const unq = new Set();
+            chks.forEach(c => {
+                const drink = cocktails[c.value];
+                drink.ingredients.forEach(i => unq.add(i.replace(/^[\d\.\-\/]+\s*(ml|oz|tsp|tbsp|dashes|dash|fresh|drops|part|parts)?\s*/i, '').trim().replace(/^\w/, c => c.toUpperCase())));
+                if(drink.garnish && drink.garnish.toLowerCase() !== "none") { unq.add(drink.garnish.charAt(0).toUpperCase() + drink.garnish.slice(1) + " (Garnish)"); }
+            });
+            els.shoppingItemsUl.innerHTML = ''; let idx = 0;
+            unq.forEach(item => {
+                const li = document.createElement('li'); li.style.listStyle = 'none'; 
+                li.innerHTML = `<div class="shopping-item-final"><input type="checkbox" id="have-item-${idx}"><label for="have-item-${idx}">${item}</label></div>`;
+                els.shoppingItemsUl.appendChild(li); idx++;
+            });
+            els.finalShoppingList.style.display = 'block';
+        };
+        els.shoppingBack.onclick = () => { els.adminView.style.display = 'block'; loadMenu(); };
+
+        if (!localStorage.getItem('cocktails_database')) saveToStorage();
+        loadMenu(); 
+    </script>
+
+
+  
+  
+
+
+</body>
+</html>

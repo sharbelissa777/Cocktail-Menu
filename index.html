@@ -510,7 +510,7 @@
         "method": "Shake with ice and strain into chilled glass.",
         "glass": "Coupette / Martini",
         "garnish": "Lime wheel",
-        "isHidden": true
+        "isHidden": false
     },
     {
         "name": "Classic Daiquiri",
@@ -524,7 +524,7 @@
         "method": "Shake vigorously with ice. Fine strain.",
         "glass": "Coupette",
         "garnish": "Lime wheel",
-        "isHidden": true
+        "isHidden": false
     },
     {
         "name": "Cucumber Daiquiri",
@@ -540,7 +540,7 @@
         "method": "Muddle cucumber/mint. Add liquid. Shake well. Double strain.",
         "glass": "Coupette",
         "garnish": "Cucumber slice",
-        "isHidden": true
+        "isHidden": false
     },
     {
         "name": "Paloma",
@@ -571,7 +571,7 @@
         "method": "Rinse chilled glass with absinthe. Shake other ingredients with ice. Fine strain.",
         "glass": "Coupette",
         "garnish": "Lemon twist",
-        "isHidden": true
+        "isHidden": false
     },
     {
         "name": "Gin Passionfruit",
@@ -587,7 +587,7 @@
         "glass": "Coupe",
         "garnish": "Half a passionfruit",
         "isSpecial": false,
-        "isHidden": true
+        "isHidden": false
     },
     {
         "name": "Flower Sour",
@@ -603,14 +603,14 @@
         "method": "Dry shake, then wet shake. Strain.",
         "glass": "Coupe",
         "garnish": "Lavender & Viola",
-        "isHidden": true
+        "isHidden": false
     }
 ];
 
         // DATA_VERSION: bump this whenever originalCocktails is edited in the file.
         // When it changes, the menu reloads fresh from the file (ignoring stale cache),
         // so you never need to run localStorage.clear() again.
-        const DATA_VERSION = "2026-06-28-001";
+        const DATA_VERSION = "2026-06-28-231231";
         let cocktails;
         if (localStorage.getItem('cocktails_version') === DATA_VERSION) {
             cocktails = JSON.parse(localStorage.getItem('cocktails_database')) || originalCocktails;

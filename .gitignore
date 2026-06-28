@@ -1,0 +1,4 @@
+# Secrets — never commit
+gemini-api-key.txt
+*.key
+.env

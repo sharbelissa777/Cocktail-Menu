@@ -55,9 +55,13 @@ if ($new -eq $content) {
     throw "Could not find a cocktail named '$Name' (or its imageUrl) in index.html. Check the exact spelling."
 }
 
+# Bump DATA_VERSION so the menu auto-reloads from the file (no localStorage.clear needed)
+$stamp = (Get-Date -Format "yyyy-MM-dd-HHmmss")
+$new = [regex]::Replace($new, '(const DATA_VERSION = ")[^"]*(")', ('${1}' + $stamp + '${2}'), 1)
+
 # Write back as UTF-8 WITHOUT BOM (avoids breaking the HTML)
 [IO.File]::WriteAllText($indexPath, $new, (New-Object Text.UTF8Encoding($false)))
-Write-Host "Updated index.html imageUrl for '$Name'" -ForegroundColor Green
+Write-Host "Updated index.html imageUrl for '$Name' (DATA_VERSION -> $stamp)" -ForegroundColor Green
 Write-Host "  -> $url"
 
 # --- 5. Commit & push ----------------------------------------------------

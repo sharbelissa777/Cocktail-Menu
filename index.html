@@ -607,7 +607,18 @@
     }
 ];
 
-        let cocktails = JSON.parse(localStorage.getItem('cocktails_database')) || originalCocktails;
+        // DATA_VERSION: bump this whenever originalCocktails is edited in the file.
+        // When it changes, the menu reloads fresh from the file (ignoring stale cache),
+        // so you never need to run localStorage.clear() again.
+        const DATA_VERSION = "2026-06-28-001";
+        let cocktails;
+        if (localStorage.getItem('cocktails_version') === DATA_VERSION) {
+            cocktails = JSON.parse(localStorage.getItem('cocktails_database')) || originalCocktails;
+        } else {
+            cocktails = originalCocktails;
+            localStorage.setItem('cocktails_database', JSON.stringify(originalCocktails));
+            localStorage.setItem('cocktails_version', DATA_VERSION);
+        }
         let bartenders = JSON.parse(localStorage.getItem('bartenders_list')) || INITIAL_BARTENDERS;
         
         let isAdmin = false;

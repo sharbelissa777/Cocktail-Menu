@@ -37,8 +37,14 @@ $fileName = "$slug$ext"
 $imagesDir = Join-Path $repo "images"
 if (-not (Test-Path $imagesDir)) { New-Item -ItemType Directory -Path $imagesDir | Out-Null }
 $dest = Join-Path $imagesDir $fileName
-Copy-Item -Path $Image -Destination $dest -Force
-Write-Host "Copied image -> images/$fileName" -ForegroundColor Green
+$srcFull  = (Resolve-Path $Image).Path
+$destFull = [IO.Path]::GetFullPath($dest)
+if ($srcFull -ieq $destFull) {
+    Write-Host "Image already in place -> images/$fileName" -ForegroundColor Green
+} else {
+    Copy-Item -Path $Image -Destination $dest -Force
+    Write-Host "Copied image -> images/$fileName" -ForegroundColor Green
+}
 
 # --- 3. Build the raw GitHub URL -----------------------------------------
 $url = "https://raw.githubusercontent.com/$ghUser/$ghRepo/$branch/images/$fileName"

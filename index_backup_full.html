@@ -393,16 +393,47 @@
 
         const originalCocktails = [
     {
-        "name": "Gin Tonic",
-        "shortDesc": "Gin, Tonic Water",
-        "imageUrl": "",
+        "name": "Gimlet",
+        "shortDesc": "Gin, lemon, simple syrup",
+        "imageUrl": "https://i.postimg.cc/9XpqPwZq/Screenshot-20260321-235800-Slides.jpg",
         "ingredients": [
-            "60ml Gin",
-            "Top with Tonic Water"
+            "60ml gin",
+            "22.5ml lemon juice",
+            "22.5 simple syrup"
         ],
-        "method": "Fill a highball glass with ice. Pour in the gin and top with tonic water. Stir gently.",
-        "glass": "Highball",
-        "garnish": "Lime wedge",
+        "method": "Combine the gin, lime juice, and simple syrup in a cocktail shake with ice  shake, double strain",
+        "glass": "Coupe",
+        "garnish": "Lime wheel",
+        "isHidden": false,
+        "isSpecial": false
+    },
+    {
+        "name": "Coffee Negroni",
+        "shortDesc": "Gin, Campari, Coffee Liqueur ",
+        "imageUrl": "https://i.postimg.cc/65Gm23jt/1777916163236.png",
+        "ingredients": [
+            "30ml gin",
+            "30ml campari",
+            "30ml Coffee Liqueur"
+        ],
+        "method": "Build in glass over a large ice cube. Stir gently to chill.",
+        "glass": "Lowball",
+        "garnish": "Orange Peel",
+        "isHidden": false,
+        "isSpecial": false
+    },
+    {
+        "name": "Aperol Spritz",
+        "shortDesc": "Aperol, Prosecco, Soda",
+        "imageUrl": "https://raw.githubusercontent.com/sharbelissa777/Cocktail-Menu/main/images/aperol-spritz.png",
+        "ingredients": [
+            "60ml Aperol",
+            "90ml Prosecco",
+            "30ml Soda Water"
+        ],
+        "method": "Fill a wine glass with ice. Pour in the Prosecco, then the Aperol, and top with soda water. Stir gently to combine.",
+        "glass": "Wine glass",
+        "garnish": "Orange slice",
         "isHidden": false,
         "isSpecial": false
     },
@@ -422,76 +453,164 @@
         "isSpecial": false
     },
     {
-        "name": "Negroni Sour",
-        "shortDesc": "Gin, Campari, Vermouth, Lemon",
-        "imageUrl": "",
+        "name": "Enzoni",
+        "shortDesc": "Gin, Campari, Lemon, Grapes",
+        "imageUrl": "https://i.postimg.cc/5ypK59qZ/IMG-20260321-WA0018.jpg",
         "ingredients": [
             "30ml Gin",
-            "22.5ml Campari",
-            "22.5ml Sweet Vermouth",
-            "22.5ml Lemon Juice",
-            "15ml Simple Syrup"
-        ],
-        "method": "Shake all ingredients hard with ice. Fine strain into a chilled coupe.",
-        "glass": "Coupe",
-        "garnish": "Orange peel",
-        "isHidden": false,
-        "isSpecial": false
-    },
-    {
-        "name": "Tom Collins",
-        "shortDesc": "Gin, Lemon, Soda",
-        "imageUrl": "",
-        "ingredients": [
-            "50ml Gin",
-            "25ml Lemon Juice",
-            "15ml Simple Syrup",
-            "Top with Soda Water"
-        ],
-        "method": "Shake gin, lemon, and syrup with ice. Strain into an ice-filled highball and top with soda water.",
-        "glass": "Highball (Collins)",
-        "garnish": "Lemon slice",
-        "isHidden": false,
-        "isSpecial": false
-    },
-    {
-        "name": "Gin & Aperol",
-        "shortDesc": "Gin, Aperol, Lemon",
-        "imageUrl": "",
-        "ingredients": [
-            "50ml Gin",
-            "30ml Aperol",
+            "30ml Campari",
             "20ml Lemon Juice",
-            "10ml Simple Syrup"
+            "15ml Simple Syrup",
+            "5 Fresh Green Grapes"
         ],
-        "method": "Shake all ingredients with ice. Fine strain into a chilled coupe.",
-        "glass": "Coupe",
-        "garnish": "Orange peel",
+        "method": "Muddle grapes in a shaker. Add gin, campari, lemon, syrup, and ice. Shake vigorously. Double strain over fresh ice.",
+        "glass": "Lowball",
+        "garnish": "Skewered grapes",
         "isHidden": false,
         "isSpecial": false
     },
     {
-        "name": "Bramble",
-        "shortDesc": "Gin, Lemon, Blackberry",
-        "imageUrl": "",
+        "name": "Espresso Martini",
+        "shortDesc": "Vodka, Coffee Liqueur, Fresh Espresso",
+        "imageUrl": "https://i.postimg.cc/4yTbYDDM/Screenshot-20260321-235506-Slides.jpg",
+        "ingredients": [
+            "60ml Vodka",
+            "30ml Coffee Liqueur",
+            "30ml Fresh Espresso (hot)"
+        ],
+        "method": "Pour all ingredients into a shaker with ice. Shake very hard to create a rich foam. Fine strain into a chilled glass.",
+        "glass": "Coupette / Martini",
+        "garnish": "3 Coffee beans",
+        "isSpecial": false
+    },
+    {
+        "name": "Vodka Blueberry",
+        "shortDesc": "Vodka, Blueberries, Brown Sugar, Sprite",
+        "imageUrl": "https://i.postimg.cc/R06cXC4S/Screenshot-20260321-235740-Slides.jpg",
+        "ingredients": [
+            "60ml Vodka",
+            "1 tsp Brown Sugar",
+            "10-15 Fresh Blueberries",
+            "Top with Sprite"
+        ],
+        "method": "Add blueberries and brown sugar to muddle, add vodka and ice, top with sprite.",
+        "glass": "Highball",
+        "garnish": "Mint sprig",
+        "isHidden": false
+    },
+    {
+        "name": "Kamikaze",
+        "shortDesc": "Vodka, Triple Sec, Lime",
+        "imageUrl": "https://i.postimg.cc/9XpqPwZq/Screenshot-20260321-235800-Slides.jpg",
+        "ingredients": [
+            "60ml Vodka",
+            "30ml Triple Sec",
+            "30ml Fresh Lime Juice"
+        ],
+        "method": "Shake with ice and strain into chilled glass.",
+        "glass": "Coupette / Martini",
+        "garnish": "Lime wheel",
+        "isHidden": false
+    },
+    {
+        "name": "Classic Daiquiri",
+        "shortDesc": "Rum, Lime, Sugar",
+        "imageUrl": "https://i.postimg.cc/sgpBXBjC/1774131489804.png",
+        "ingredients": [
+            "60ml White Rum",
+            "30ml Fresh Lime Juice",
+            "20ml Sugar Syrup"
+        ],
+        "method": "Shake vigorously with ice. Fine strain.",
+        "glass": "Coupette",
+        "garnish": "Lime wheel",
+        "isHidden": false
+    },
+    {
+        "name": "Cucumber Daiquiri",
+        "shortDesc": "Rum, Lime, Cucumber, Mint",
+        "imageUrl": "https://i.postimg.cc/zvSMvScT/Screenshot-20260322-000638-Slides.jpg",
+        "ingredients": [
+            "60ml White Rum",
+            "30ml Fresh Lime Juice",
+            "30ml Sugar Syrup",
+            "3 Cucumber slices",
+            "6-8 Mint leaves"
+        ],
+        "method": "Muddle cucumber/mint. Add liquid. Shake well. Double strain.",
+        "glass": "Coupette",
+        "garnish": "Cucumber slice",
+        "isHidden": false
+    },
+    {
+        "name": "Paloma",
+        "shortDesc": "Tequila, Lime, Grapefruit Soda",
+        "imageUrl": "https://i.postimg.cc/k4SL3dN1/Screenshot-20260322-000656-Slides.jpg",
+        "ingredients": [
+            "60ml Tequila",
+            "15ml Lime Juice",
+            "Top with Grapefruit Soda"
+        ],
+        "method": "Built in glass with salted rim. Add ice, tequila, lime, top with soda.",
+        "glass": "Highball",
+        "garnish": "Grapefruit wedge",
+        "isSpecial": false,
+        "isHidden": false
+    },
+    {
+        "name": "Corpse Reviver No. 2",
+        "shortDesc": "Gin, Vermouth, Triple Sec, Lemon, Absinthe",
+        "imageUrl": "https://i.postimg.cc/h4dKGxrp/1774207751858.png",
+        "ingredients": [
+            "30ml Gin",
+            "30ml White Vermouth",
+            "30ml Triple Sec",
+            "30ml Fresh Lemon Juice",
+            "Dash of Absinthe"
+        ],
+        "method": "Rinse chilled glass with absinthe. Shake other ingredients with ice. Fine strain.",
+        "glass": "Coupette",
+        "garnish": "Lemon twist",
+        "isHidden": false
+    },
+    {
+        "name": "Gin Passionfruit",
+        "shortDesc": "Gin, Passionfruit Liqueur, Lime, Simple Syrup",
+        "imageUrl": "https://i.postimg.cc/5tB8Z7YQ/1774131176117.png",
         "ingredients": [
             "60ml Gin",
-            "30ml Lemon Juice",
+            "25ml Fresh Lime Juice",
             "15ml Simple Syrup",
-            "15ml Crème de Mûre"
+            "1 fresh Passionfruit (pulp)"
         ],
-        "method": "Shake gin, lemon, and syrup with ice. Strain over crushed ice in a lowball, then drizzle the creme de mure over the top.",
-        "glass": "Lowball",
-        "garnish": "Blackberry & lemon slice",
-        "isHidden": false,
-        "isSpecial": false
+        "method": "Shake passionfruit pulp with liquids. Fine strain.",
+        "glass": "Coupe",
+        "garnish": "Half a passionfruit",
+        "isSpecial": false,
+        "isHidden": false
+    },
+    {
+        "name": "Flower Sour",
+        "shortDesc": "Gin, Elderflower Liqueur, Lemon, Egg White",
+        "imageUrl": "https://i.postimg.cc/MGqn75s5/1774208265854.png",
+        "ingredients": [
+            "60ml Gin",
+            "30ml St-Germain",
+            "30ml Fresh Lime Juice",
+            "7.5ml Simple Syrup",
+            "Optional 1 White Egg"
+        ],
+        "method": "Dry shake, then wet shake. Strain.",
+        "glass": "Coupe",
+        "garnish": "Lavender & Viola",
+        "isHidden": false
     }
 ];
 
         // DATA_VERSION: bump this whenever originalCocktails is edited in the file.
         // When it changes, the menu reloads fresh from the file (ignoring stale cache),
         // so you never need to run localStorage.clear() again.
-        const DATA_VERSION = "2026-07-23-161224";
+        const DATA_VERSION = "2026-06-28-231231";
         let cocktails;
         if (localStorage.getItem('cocktails_version') === DATA_VERSION) {
             cocktails = JSON.parse(localStorage.getItem('cocktails_database')) || originalCocktails;

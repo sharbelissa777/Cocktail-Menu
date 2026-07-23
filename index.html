@@ -483,7 +483,7 @@
         "method": "Shake gin, lemon, and syrup with ice. Strain over crushed ice in a lowball, then drizzle the creme de mure over the top.",
         "glass": "Lowball",
         "garnish": "Blackberry & lemon slice",
-        "isHidden": false,
+        "isHidden": true,
         "isSpecial": false
     }
 ];
@@ -491,7 +491,7 @@
         // DATA_VERSION: bump this whenever originalCocktails is edited in the file.
         // When it changes, the menu reloads fresh from the file (ignoring stale cache),
         // so you never need to run localStorage.clear() again.
-        const DATA_VERSION = "2026-07-23-164343";
+        const DATA_VERSION = "2026-07-23-hide-bramble";
         let cocktails;
         if (localStorage.getItem('cocktails_version') === DATA_VERSION) {
             cocktails = JSON.parse(localStorage.getItem('cocktails_database')) || originalCocktails;
